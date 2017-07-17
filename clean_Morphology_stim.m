@@ -17,46 +17,58 @@ cleanpath = r_mkdir([pwd filesep 'clean_stim'], subject_dir_name);
 
 for subj = 1 : length(subjectpath)
     
-    localizer_files = get_subdir_regex_files(subjectpath{subj}, 'Morphology_MRI_1.mat', 1);
-    loca = load(localizer_files{1});
+    nonce_files = get_subdir_regex_files(subjectpath{subj}, 'Morphology_nonce_MRI_1.mat', 1);
+    nonce = load(nonce_files{1});
     
-    listOfOnsets = loca.DataStruct.TaskData.Display_cell;
+    listOfOnsets_nonce = nonce.DataStruct.TaskData.Display_cell;
     
-    names = {'rest', 'sentence', 'psedo_sentence'};
+    names = {'null', 'morpho_nonce', 'control_nonce'};
     onsets = cell(size(names));
     durations = cell(size(names));
     
-    prev_name = '';
-    prev_target = 1;
-    duration_current_event = [];
-    
-    for idx = 2 : length(listOfOnsets)-1
-        switch listOfOnsets{idx,1}
-            case 'rest'
-                target = 1;
-            case 'sentence'
-                target = 2;
-            case 'psedo_sentence'
-                target = 3;
+    for idx = 2 : size(listOfOnsets_nonce,1)-1
+        switch listOfOnsets_nonce{idx,1}
+            case 'condition_NULL_cross'
+                onsets{1}    = [onsets{1}    listOfOnsets_nonce{idx  ,2}                          ];
+                durations{1} = [durations{1} listOfOnsets_nonce{idx+1,2}-listOfOnsets_nonce{idx,2}];
+            case 'condition_0_cross'
+                onsets{2}    = [onsets{2}    listOfOnsets_nonce{idx  ,2}                          ];
+                durations{2} = [durations{2} listOfOnsets_nonce{idx+1,2}-listOfOnsets_nonce{idx,2}];
+            case 'condition_1_cross'
+                onsets{3}    = [onsets{3}    listOfOnsets_nonce{idx  ,2}                          ];
+                durations{3} = [durations{3} listOfOnsets_nonce{idx+1,2}-listOfOnsets_nonce{idx,2}];
         end
-        
-        if strcmp(prev_name,listOfOnsets{idx,1})
-            duration_current_event = duration_current_event + listOfOnsets{idx+1,2} - listOfOnsets{idx,2};
-        else
-            durations{prev_target} = [durations{prev_target} duration_current_event];
-            
-            onsets{target} = [onsets{target} listOfOnsets{idx,2}];
-            
-            duration_current_event = listOfOnsets{idx+1,2} - listOfOnsets{idx,2};
-            
-        end
-        prev_name = listOfOnsets{idx,1};
-        prev_target = target;
     end
     
-    % Last 'rest' is special
-    durations{1} = [durations{1} listOfOnsets{idx+1,2}-listOfOnsets{idx,2}];
+    save([cleanpath{1} 'morpho_nonce.mat'],'names','onsets','durations')
     
-    save([cleanpath{1} 'localizer.mat'],'names','onsets','durations')
+end % subj
+
+for subj = 1 : length(subjectpath)
+    
+    words_files = get_subdir_regex_files(subjectpath{subj}, 'Morphology_words_MRI_1.mat', 1);
+    words = load(words_files{1});
+    
+    listOfOnsets_words = words.DataStruct.TaskData.Display_cell;
+    
+    names = {'null', 'morpho_nonce', 'control_nonce'};
+    onsets = cell(size(names));
+    durations = cell(size(names));
+    
+    for idx = 2 : size(listOfOnsets_words,1)-1
+        switch listOfOnsets_words{idx,1}
+            case 'condition_NULL_cross'
+                onsets{1}    = [onsets{1}    listOfOnsets_words{idx  ,2}                          ];
+                durations{1} = [durations{1} listOfOnsets_words{idx+1,2}-listOfOnsets_words{idx,2}];
+            case 'condition_0_cross'
+                onsets{2}    = [onsets{2}    listOfOnsets_words{idx  ,2}                          ];
+                durations{2} = [durations{2} listOfOnsets_words{idx+1,2}-listOfOnsets_words{idx,2}];
+            case 'condition_1_cross'
+                onsets{3}    = [onsets{3}    listOfOnsets_words{idx  ,2}                          ];
+                durations{3} = [durations{3} listOfOnsets_words{idx+1,2}-listOfOnsets_words{idx,2}];
+        end
+    end
+    
+    save([cleanpath{1} 'morpho_words.mat'],'names','onsets','durations')
     
 end % subj
