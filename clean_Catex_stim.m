@@ -42,6 +42,6 @@ for subj = 1 : length(subjectpath)
         end
     end
     
-    save([cleanpath{1} 'catex.mat'],'names','onsets','durations')
+    save([cleanpath{subj} 'catex.mat'],'names','onsets','durations')
     
 end % subj

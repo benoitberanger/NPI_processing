@@ -40,7 +40,7 @@ for subj = 1 : length(subjectpath)
         end
     end
     
-    save([cleanpath{1} 'morpho_nonce.mat'],'names','onsets','durations')
+    save([cleanpath{subj} 'morpho_nonce.mat'],'names','onsets','durations')
     
 end % subj
 
@@ -69,6 +69,6 @@ for subj = 1 : length(subjectpath)
         end
     end
     
-    save([cleanpath{1} 'morpho_words.mat'],'names','onsets','durations')
+    save([cleanpath{subj} 'morpho_words.mat'],'names','onsets','durations')
     
 end % subj

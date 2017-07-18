@@ -57,6 +57,6 @@ for subj = 1 : length(subjectpath)
     % Last 'rest' is special
     durations{1} = [durations{1} listOfOnsets{idx+1,2}-listOfOnsets{idx,2}];
     
-    save([cleanpath{1} 'localizer.mat'],'names','onsets','durations')
+    save([cleanpath{subj} 'localizer.mat'],'names','onsets','durations')
     
 end % subj
