@@ -5,7 +5,8 @@ clc
 
 imgpath = [ pwd filesep 'img'];
 
-subjectpath = get_subdir_regex(imgpath,'NPI');
+subjectpath_raw = get_subdir_regex(imgpath,'NPI');
+subjectpath = remove_regex(subjectpath_raw,'_/$');
 % suj = get_subdir_regex(chemin);
 %to see the content
 char(subjectpath)
@@ -34,7 +35,7 @@ catexdir=r_mkdir(statdir,'catex')
 do_delete(catexdir,0)
 catexdir=r_mkdir(statdir,'catex')
 
-par.file_reg = '^sutrf.*nii';
+par.file_reg = '^swutrf.*nii';
 
 par.TR=2.000;
 par.delete_previous=1;

@@ -5,7 +5,8 @@ clc
 
 stimpath = [pwd filesep 'raw_stim'];
 
-subjectpath = get_subdir_regex(stimpath, 'NPI');
+subjectpath_raw = get_subdir_regex(stimpath, 'NPI');
+subjectpath = remove_regex(subjectpath_raw,'_/$');
 
 [~, subject_dir_name] = get_parent_path(subjectpath,1);
 
@@ -17,7 +18,9 @@ cleanpath = r_mkdir([pwd filesep 'clean_stim'], subject_dir_name);
 
 for subj = 1 : length(subjectpath)
     
-    msit_files = get_subdir_regex_files(subjectpath{subj}, 'MSIT_MRI_1.mat', 1);
+    fprintf('MSIT processing : %s\n', subjectpath{subj});
+    
+    msit_files = get_subdir_regex_files(subjectpath{subj}, 'MSIT_MRI_\d.mat$', 1);
     msit = load(msit_files{1});
     
     listOfOnsets = msit.DataStruct.TaskData.Display_cell;

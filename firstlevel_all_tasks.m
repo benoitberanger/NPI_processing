@@ -1,7 +1,9 @@
 clear
 clc
 
+tic
 firstlevel_Localizer
 firstlevel_MSIT
 firstlevel_Morpho
 firstlevel_Catex
+toc

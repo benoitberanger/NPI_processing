@@ -5,7 +5,8 @@ clc
 
 imgpath = [ pwd filesep 'img'];
 
-subjectpath = get_subdir_regex(imgpath,'NPI');
+subjectpath_raw = get_subdir_regex(imgpath,'NPI');
+subjectpath = remove_regex(subjectpath_raw,'_/$');
 % suj = get_subdir_regex(chemin);
 %to see the content
 char(subjectpath)
@@ -16,7 +17,7 @@ par.run=1;
 
 %% Get files paths
 
-dfonc_morpho = get_subdir_regex_multi(subjectpath,'Morpho_nonce$|Morpho_words$') % ; char(dfonc{:})
+dfonc_morpho = get_subdir_regex_multi(subjectpath,'Morpho_1$|Morpho_2$|Morpho_nonce$|Morpho_words$') % ; char(dfonc{:})
 
 
 %% Fetch onset .mat file
@@ -34,7 +35,7 @@ morphodir=r_mkdir(statdir,'morpho')
 do_delete(morphodir,0)
 morphodir=r_mkdir(statdir,'morpho')
 
-par.file_reg = '^sutrf.*nii';
+par.file_reg = '^swutrf.*nii';
 
 par.TR=2.000;
 par.delete_previous=1;

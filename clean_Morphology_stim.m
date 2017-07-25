@@ -5,7 +5,8 @@ clc
 
 stimpath = [pwd filesep 'raw_stim'];
 
-subjectpath = get_subdir_regex(stimpath, 'NPI');
+subjectpath_raw = get_subdir_regex(stimpath, 'NPI');
+subjectpath = remove_regex(subjectpath_raw,'_/$');
 
 [~, subject_dir_name] = get_parent_path(subjectpath,1);
 
@@ -17,7 +18,9 @@ cleanpath = r_mkdir([pwd filesep 'clean_stim'], subject_dir_name);
 
 for subj = 1 : length(subjectpath)
     
-    nonce_files = get_subdir_regex_files(subjectpath{subj}, 'Morphology_nonce_MRI_1.mat', 1);
+    fprintf('MORPHO NONCE processing : %s\n', subjectpath{subj});
+    
+    nonce_files = get_subdir_regex_files(subjectpath{subj}, 'Morphology_nonce_MRI_\d.mat$', 1);
     nonce = load(nonce_files{1});
     
     listOfOnsets_nonce = nonce.DataStruct.TaskData.Display_cell;
@@ -46,7 +49,9 @@ end % subj
 
 for subj = 1 : length(subjectpath)
     
-    words_files = get_subdir_regex_files(subjectpath{subj}, 'Morphology_words_MRI_1.mat', 1);
+    fprintf('MORPHO WORDS processing : %s\n', subjectpath{subj});
+    
+    words_files = get_subdir_regex_files(subjectpath{subj}, 'Morphology_words_MRI_\d.mat$', 1);
     words = load(words_files{1});
     
     listOfOnsets_words = words.DataStruct.TaskData.Display_cell;

@@ -5,7 +5,8 @@ clc
 
 imgpath = [ pwd filesep 'img'];
 
-subjectpath = get_subdir_regex(imgpath,'NPI');
+subjectpath_raw = get_subdir_regex(imgpath,'NPI');
+subjectpath = remove_regex(subjectpath_raw,'_/$');
 % suj = get_subdir_regex(chemin);
 %to see the content
 char(subjectpath)
@@ -33,7 +34,7 @@ localizerdir=r_mkdir(statdir,'localizer')
 do_delete(localizerdir,0)
 localizerdir=r_mkdir(statdir,'localizer')
 
-par.file_reg = '^sutrf.*nii';
+par.file_reg = '^swutrf.*nii';
 
 par.TR=2.000;
 par.delete_previous=1;

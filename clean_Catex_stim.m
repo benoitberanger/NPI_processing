@@ -5,7 +5,8 @@ clc
 
 stimpath = [pwd filesep 'raw_stim'];
 
-subjectpath = get_subdir_regex(stimpath, 'NPI');
+subjectpath_raw = get_subdir_regex(stimpath, 'NPI');
+subjectpath = remove_regex(subjectpath_raw,'_/$');
 
 [~, subject_dir_name] = get_parent_path(subjectpath,1);
 
@@ -19,7 +20,9 @@ cleanpath = r_mkdir([pwd filesep 'clean_stim'], subject_dir_name);
 
 for subj = 1 : length(subjectpath)
     
-    catex_files = get_subdir_regex_files(subjectpath{subj}, 'LexicalCategorization_MRI_1.mat', 1);
+    fprintf('CATEX processing : %s\n', subjectpath{subj});
+    
+    catex_files = get_subdir_regex_files(subjectpath{subj}, 'LexicalCategorization_MRI_\d.mat$', 1);
     catex = load(catex_files{1});
     
     listOfOnsets_catex = catex.DataStruct.TaskData.Display_cell;
