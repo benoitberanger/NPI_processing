@@ -7,7 +7,7 @@ imgpath = [ pwd filesep 'img'];
 
 subjectpath_raw = get_subdir_regex(imgpath,'NPI');
 subjectpath = remove_regex(subjectpath_raw,'_/$');
-% suj = get_subdir_regex(chemin);
+
 %to see the content
 char(subjectpath_raw)
 char(subjectpath)
