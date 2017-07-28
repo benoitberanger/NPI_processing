@@ -15,7 +15,7 @@ char(subjectpath)
 %functional and anatomic subdir
 par.dfonc_reg              = 'EP2D.*[esrTX12]$';
 par.dfonc_reg_oposit_phase = 'EP2D.*[esrTX12]_AP$';
-par.danat_reg='UNI';
+par.danat_reg='UNI_Images$';
 
 %for the preprocessing : Volume selecytion
 par.anat_file_reg  = '^s.*nii'; %le nom generique du volume pour l'anat
