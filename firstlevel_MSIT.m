@@ -1,23 +1,7 @@
-clear
-clc
-
-%% Prepare paths and regexp
-
-imgpath = [ pwd filesep 'img'];
-
-subjectpath_raw = get_subdir_regex(imgpath,'NPI');
-subjectpath = remove_regex(subjectpath_raw,'_/$');
-% suj = get_subdir_regex(chemin);
-%to see the content
-char(subjectpath)
-
-par.display=0;
-par.run=1;
-
-
 %% Get files paths
 
 dfonc_msit = get_subdir_regex_multi(subjectpath,'MSIT$') % ; char(dfonc{:})
+
 
 %% Fetch onset .mat file
 
@@ -27,25 +11,7 @@ cleanpath = get_subdir_regex([pwd filesep 'clean_stim'], subject_dir_name);
 msit_onsetfile = get_subdir_regex_files(cleanpath,'msit',1)
 
 
-%% first level
-
-statdir=r_mkdir(subjectpath,'stat')
-msitdir=r_mkdir(statdir,'msit')
-do_delete(msitdir,0)
-msitdir=r_mkdir(statdir,'msit')
-
-par.file_reg = '^swutrf.*nii';
-
-par.TR=2.000;
-par.delete_previous=1;
-
-
 %% Specify model
-
-par.rp = 1; % realignment paramters : movement regressors
-
-par.run = 1;
-par.display = 0;
 
 j = job_first_level_specify(dfonc_msit,msitdir,msit_onsetfile,par)
 
@@ -88,9 +54,6 @@ par.delete_previous=1;
 
 
 %% Estimate contrast : all runs
-
-par.run = 1;
-par.display = 0;
 
 par.sessrep = 'none';
 j_contrast_rep = job_first_level_contrast(fspm,contrast,par)

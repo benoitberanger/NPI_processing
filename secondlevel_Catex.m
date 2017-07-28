@@ -1,63 +1,3 @@
-clear
-clc
-
-%% Prepare paths and regexp
-
-imgpath = [ pwd filesep 'img'];
-
-subjectpath_raw = get_subdir_regex(imgpath,'NPI');
-subjectpath = remove_regex(subjectpath_raw,'_/$');
-% suj = get_subdir_regex(chemin);
-%to see the content
-char(subjectpath)
-
-par.display=0;
-par.run=1;
-
-myScans = {
-    
-% fmri exam               'group'
-'2015_05_15_NPI_Pilote03' 'nc'
-'2015_05_15_NPI_Pilote04' 'nc'
-'2015_06_16_NPI_AUDH'     'nc'
-'2015_06_16_NPI_MORP'     'prehd'
-'2015_06_18_NPI_KOCL'     'prehd'
-'2015_06_23_NPI_HUGC'     'nc'
-'2015_06_24_NPI_MAZL'     'prehd'
-'2015_06_30_NPI_BERK'     'nc'
-'2015_07_21_NPI_PERP'     'nc'
-'2015_07_24_NPI_JOUM'     'nc'
-'2015_07_24_NPI_MALC'     'nc'
-'2015_07_28_NPI_PEAR'     'prehd'
-'2015_07_29_NPI_TROC'     'prehd'
-'2015_07_31_NPI_BAIR'     'nc'
-'2015_07_31_NPI_BRUS'     'nc'
-'2015_07_31_NPI_NICP'     'nc'
-'2015_08_03_NPI_BREH'     'nc'
-'2015_08_03_NPI_LAMC'     'nc'
-'2015_08_03_NPI_MATT'     'nc'
-'2015_08_05_NPI_DAVE'     'nc'
-'2015_08_10_NPI_COMR'     'nc'
-'2015_08_10_NPI_TOUP'     'nc'
-'2015_08_26_NPI_AMAM'     'nc'
-'2015_08_26_NPI_LATP'     'nc'
-'2015_08_28_NPI_SIXJ'     'prehd'
-'2015_08_28_NPI_ZOZM'     'nc'
-'2015_09_14_NPI_PECE'     'prehd'
-'2015_10_28_NPI_BERD'     'prehd'
-'2016_01_08_NPI_BELA'     'prehd'
-'2016_01_15_NPI_RAMC'     'prehd'
-'2016_02_05_NPI_MICV'     'prehd'
-'2016_02_19_NPI_MOSC'     'nc'
-'2016_03_07_NPI_BRAA'     'nc'
-'2016_04_08_NPI_BERE'     'prehd'
-'2016_05_27_NPI_DIBS'     'prehd'
-'2016_10_21_NPI_KOKP'     'prehd'
-'2017_07_07_NPI_BRIA'     'prehd'
-
-};
-
-
 %% Fetch contrasts & prepare groups
 
 basedir = [ pwd filesep 'secondlevel' filesep 'catex'];
@@ -83,15 +23,15 @@ for c = 1 : length(contrastdir)
     grp_nc = [];
     grp_prehd = [];
     
-    for s = 1 : size(myScans)
+    for s = 1 : size(examList)
         
-        current_imagepath = get_subdir_regex(imgpath,myScans{s,1},'stat','catex');
+        current_imagepath = get_subdir_regex(imgpath,examList{s,1},'stat','catex');
         
         current_contrastfile = get_subdir_regex_files(current_imagepath,sprintf('con_000%d.nii',contrastNumbers(c)));
         
-        if strcmp(myScans{s,2},'nc')
+        if strcmp(examList{s,2},'nc')
             grp_nc = [ grp_nc; current_contrastfile ]; %#ok<*AGROW>
-        elseif strcmp(myScans{s,2},'prehd')
+        elseif strcmp(examList{s,2},'prehd')
             grp_prehd = [ grp_prehd; current_contrastfile ];
         end
         
@@ -138,44 +78,11 @@ for c = 1 : length(contrastdir)
     spm_jobman('run', matlabbatch);
     
     
-    %% Estimate
+    %% Estimate & write contrasts
     
     fspm = get_subdir_regex_files( contrastdir{c} , 'SPM.mat' , 1 )
     
-    job2{1}.spm.stats.fmri_est.spmmat = fspm ;
-    job2{1}.spm.stats.fmri_est.write_residuals = 0;
-    job2{1}.spm.stats.fmri_est.method.Classical = 1;
+    secondlevel_estimate_and_write_contrasts
     
-    
-    %%
-    
-    
-    spm_jobman('run', job2);
-    
-    
-    %% Contraste
-    
-    contrast.names = {
-        'nc'
-        'prehd'
-        'nc - prehd'
-        'prehd - nc'
-        }';
-    
-    contrast.values = {
-        [1 0]
-        [0 1]
-        [1 -1]
-        [-1 1]
-        }';
-    
-    contrast.types = cat(1,repmat({'T'},[1 length(contrast.names)]));
-    par.delete_previous=1;
-    par.run=1;
-    
-    
-    %% Write contrasts
-    
-    job_first_level_contrast(fspm,contrast,par)
     
 end

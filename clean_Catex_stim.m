@@ -1,23 +1,3 @@
-clear
-clc
-
-%% Fetch dirs and subject names
-
-stimpath = [pwd filesep 'raw_stim'];
-
-subjectpath_raw = get_subdir_regex(stimpath, 'NPI');
-subjectpath = remove_regex(subjectpath_raw,'_/$');
-
-[~, subject_dir_name] = get_parent_path(subjectpath,1);
-
-
-%% Create dirs that will receive the cleaned onsets
-
-cleanpath = r_mkdir([pwd filesep 'clean_stim'], subject_dir_name);
-
-
-%% Clean
-
 for subj = 1 : length(subjectpath)
     
     fprintf('CATEX processing : %s\n', subjectpath{subj});
