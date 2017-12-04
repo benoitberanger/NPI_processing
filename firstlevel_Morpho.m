@@ -52,6 +52,9 @@ contrast.names = {
 'nonce - words : morpho'
 'nonce - words : control'
 
+'words - nonce : morpho'
+'words - nonce : control'
+
 }';
 contrast.values = {
     [ 1 0 0 rpVect contrastVect rpVect ]
@@ -76,6 +79,8 @@ contrast.values = {
     
     [ 0 1 0 rpVect 0 -1 0 rpVect ]
     [ 0 0 1 rpVect 0 0 -1 rpVect ]
+    [ 0 -1 0 rpVect 0 1 0 rpVect ]
+    [ 0 0 -1 rpVect 0 0 1 rpVect ]
     
     }';
 contrast.types = cat(1,repmat({'T'},[1 length(contrast.names)]));

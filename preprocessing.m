@@ -94,5 +94,8 @@ j_apply_normalize=job_apply_normalize(fy,fo,par)
 %smooth the data
 ffonc = get_subdir_regex_files(dfonc,'^wutrf.*nii')
 par.smooth = [8 8 8];
+par.prefix = 's';
+% par.smooth = [5 5 5];
+% par.prefix = 's5';
 j_smooth=job_smooth(ffonc,par)
 
